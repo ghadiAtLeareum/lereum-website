@@ -1,9 +1,11 @@
 import * as AWS from "aws-sdk";
-const documentClient = new AWS.DynamoDB.DocumentClient();
 import * as _dynamodbAutoMarshaller from "@aws/dynamodb-auto-marshaller";
-const marshaller = new _dynamodbAutoMarshaller.Marshaller();
 import * as axios from "axios";
 import { environment } from "../environment";
+import { create } from "domain";
+const dynamoDb = new AWS.DynamoDB();
+const documentClient = new AWS.DynamoDB.DocumentClient();
+const marshaller = new _dynamodbAutoMarshaller.Marshaller();
 const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 
 export class SignupHelpers {
@@ -11,7 +13,15 @@ export class SignupHelpers {
   clientPool: string;
   googleRecaptchaSecret: string;
   recaptchaToken: string;
+  id: string;
+  recipient: string;
+  token: string;
+  createdAt: number;
+  expiresAt: number;
   email: string;
+  lastName: string;
+  firstName: string;
+
   constructor() {
     this.verificationTable = environment.VERIFICATION_DYNAMODB_TABLE;
     this.clientPool = environment.CLIENT_POOL_ID;
@@ -19,6 +29,16 @@ export class SignupHelpers {
 
     this.verifyRecaptcha(this.recaptchaToken);
     this.checkEmailExisted(this.email);
+    this.checkIfUserExistsInDynamo(this.email);
+    this.upsertSignupUserToDynamoDb(
+      this.id,
+      this.email,
+      this.token,
+      this.firstName,
+      this.lastName,
+      this.createdAt,
+      this.expiresAt
+    );
   }
 
   async verifyRecaptcha(recaptchaToken: string) {
@@ -46,5 +66,83 @@ export class SignupHelpers {
     } else {
       return false;
     }
+  };
+
+  checkIfUserExistsInDynamo = async (email: string) => {
+    const params = {
+      TableName: "verification",
+      KeyConditionExpression: "#DYNOBASE_recipient = :pkey",
+      ExpressionAttributeValues: {
+        ":pkey": email,
+      },
+      ExpressionAttributeNames: {
+        "#DYNOBASE_recipient": "recipient",
+      },
+      ScanIndexForward: true,
+    };
+
+    const retrievedUser = await documentClient.query(params).promise();
+    if (retrievedUser.Items.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  upsertSignupUserToDynamoDb = async (
+    id: string,
+    email: string,
+    token: string,
+    firstName: string,
+    lastName: string,
+    expiresAt: number,
+    createdAt: number
+  ) => {
+    const params = {
+      "TableName": "verification",
+      Item: {
+        "recipient": {
+          S: email,
+        },
+        "type": {
+          S: "SIGN_UP_EMAIL",
+        },
+        "id": {
+          S: id,
+        },
+        "payload": {
+          M: {
+            "userId": {
+              S: id,
+            },
+            "firstName": {
+              S: firstName,
+            },
+            "lastName": {
+              S: lastName,
+            },
+            "email": {
+              S: email,
+            },
+            "createdAt": {
+              N: createdAt,
+            },
+          },
+        },
+        "token": {
+          S: token,
+        },
+        "created_at": {
+          N: createdAt,
+        },
+        "expiresAt": {
+          N: expiresAt,
+        },
+      },
+    };
+    console.log(params)
+    console.log("Adding a new item...");
+    const result = await documentClient.put(params).promise()
+    if (result) return result
   };
 }

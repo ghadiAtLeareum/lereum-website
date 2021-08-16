@@ -213,7 +213,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/signup-v2/dev/1628845847690-2021-08-13T09:10:47.690Z/signup-v2.zip"
+                "S3Key": "serverless/signup-v2/dev/1629108887341-2021-08-16T10:14:47.341Z/signup-v2.zip"
               },
               "Handler": "./lambdas/signupMainLambda.handler",
               "Runtime": "nodejs14.x",
@@ -236,14 +236,14 @@
               "SignupMainLambdaLogGroup"
             ]
           },
-          "SignupMainLambdaLambdaVersiongI4STorqa8gxWSMSGU6vVoL4ztJfqyIq1tNC9Hk": {
+          "SignupMainLambdaLambdaVersionsvmhxao8bGHkVIqkvSb7QUgC8TEU4nUtGyPyYzzf5FE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SignupMainLambdaLambdaFunction"
               },
-              "CodeSha256": "gd9thinJ07rhGqSFwKjzAFgGu1QTeL5d/6N0jHPJgz0="
+              "CodeSha256": "wa/nq5/sgDdps+bOLdbH4+Kk//iedHe5neV72w0/BNw="
             }
           },
           "ApiGatewayRestApi": {
@@ -365,7 +365,7 @@
               "SignupMainLambdaLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1628845840804": {
+          "ApiGatewayDeployment1629108880601": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -428,7 +428,7 @@
           "SignupMainLambdaLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SignupMainLambdaLambdaVersiongI4STorqa8gxWSMSGU6vVoL4ztJfqyIq1tNC9Hk"
+              "Ref": "SignupMainLambdaLambdaVersionsvmhxao8bGHkVIqkvSb7QUgC8TEU4nUtGyPyYzzf5FE"
             },
             "Export": {
               "Name": "sls-signup-v2-dev-SignupMainLambdaLambdaFunctionQualifiedArn"
@@ -595,7 +595,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "SignupMainLambdaLambdaVersiongI4STorqa8gxWSMSGU6vVoL4ztJfqyIq1tNC9Hk"
+        "versionLogicalId": "SignupMainLambdaLambdaVersionsvmhxao8bGHkVIqkvSb7QUgC8TEU4nUtGyPyYzzf5FE"
       }
     },
     "configValidationMode": "warn",
@@ -622,7 +622,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/signup-v2/dev/1628845847690-2021-08-13T09:10:47.690Z",
+    "artifactDirectoryName": "serverless/signup-v2/dev/1629108887341-2021-08-16T10:14:47.341Z",
     "artifact": ""
   }
 }

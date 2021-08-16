@@ -37,3 +37,124 @@
       }
    }
 }
+
+
+
+
+var token = Math.floor(100000 + Math.random() * 900000);
+
+        var tableName = this.verificationTable;
+       
+ var registrationItem = {
+          
+          recipient: "mdallalghadi1998@gmail.com",
+          token: token,
+          createdAt: Date.now(),
+          expiresAt: Math.floor(Date.now() / 1000) + 86400,
+          payload: this.payload = {
+            email: "mdallalghadi1998@gmail.com",
+            firstNaame: "ghadi",
+            lastName: "mdallal",
+            timestamp: Date.now(),
+            expiresAt: Math.floor(Date.now() / 1000) + 86400, //add 1 Day
+          },
+        };
+
+
+
+        import * as AWS from "aws-sdk";
+const documentClient = new AWS.DynamoDB.DocumentClient();
+import * as _dynamodbAutoMarshaller from "@aws/dynamodb-auto-marshaller";
+
+
+export const upsertSignupUserToDynamoDb = async () => {
+    var tableName = "verification";
+    documentClient.put(
+        {
+            TableName: tableName,
+            Item: {
+                id: {
+                    S: "2",
+                },
+                recipient: {
+                    S: "mdallalghadi@gmail.com",
+                },
+                type: {
+                    S: "SIGN_UP_EMAIL",
+                },
+                token: {
+                    S: "difhosdahfodishf;odsi",
+                },
+                created_at: {
+                    S: "21-2-2020",
+                },
+                ttl: {
+                    S: "21-3-2020",
+                },
+                payload: {
+                    M: {
+                        userId: { S: "12" },
+                        firstName: { S: "ghadi" },
+                        lastName: { S: "mdallal" },
+                        email: { S: "ghadi@gmail.com" },
+                        createdAt: { S: "20-20-20" },
+                    },
+                },
+            },
+        },
+        function (err, data) {
+            if (err) {
+                return err
+            } else {
+                console.log( JSON.stringify(data, null, "  "))
+            }
+        }
+    );
+}
+
+
+
+ { [x: string]: any; id?: string; recipient?: any; type?: string; token?: number; createdAt?: number; expiresAt?: number; } 
+
+
+
+
+ {
+   "recipient":{
+      "S":"mdalal@gmail.com"
+   },
+   "type":{
+      "S":"SIGN_UP_EMAIL"
+   },
+   "id":{
+      "S":"sadfkqy2803fy03829y"
+   },
+   "payload":{
+      "M":{
+         "userId":{
+            "S":"sjkadhfp98q4pfuew"
+         },
+         "firstName":{
+            "S":"firstName"
+         },
+         "lastName":{
+            "S":"lastName"
+         },
+         "email":{
+            "S":"email"
+         },
+         "createdAt":{
+            "N":"123213233"
+         }
+      }
+   },
+   "token":{
+      "S":"dsgfsdgfdg"
+   },
+   "created_at":{
+      "N":"123134324"
+   },
+   "ttl":{
+      "N":"2343233"
+   }
+}
