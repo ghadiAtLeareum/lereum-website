@@ -185,7 +185,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/signup-v2/dev/1629108887341-2021-08-16T10:14:47.341Z/signup-v2.zip"
+          "S3Key": "serverless/signup-v2/dev/1629179201850-2021-08-17T05:46:41.850Z/signup-v2.zip"
         },
         "Handler": "./lambdas/signupMainLambda.handler",
         "Runtime": "nodejs14.x",
@@ -208,14 +208,14 @@
         "SignupMainLambdaLogGroup"
       ]
     },
-    "SignupMainLambdaLambdaVersionsvmhxao8bGHkVIqkvSb7QUgC8TEU4nUtGyPyYzzf5FE": {
+    "SignupMainLambdaLambdaVersionv1Hu6eH5PdgwpxfDMq5YI889sSwDcYBflDkJuoV1xL8": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "SignupMainLambdaLambdaFunction"
         },
-        "CodeSha256": "wa/nq5/sgDdps+bOLdbH4+Kk//iedHe5neV72w0/BNw="
+        "CodeSha256": "bIOm3TA5JZDNF84HqMg+Cxdi47j2QoUN/9la2PenySk="
       }
     },
     "ApiGatewayRestApi": {
@@ -337,7 +337,7 @@
         "SignupMainLambdaLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1629108880601": {
+    "ApiGatewayDeployment1629179194624": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -400,7 +400,7 @@
     "SignupMainLambdaLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SignupMainLambdaLambdaVersionsvmhxao8bGHkVIqkvSb7QUgC8TEU4nUtGyPyYzzf5FE"
+        "Ref": "SignupMainLambdaLambdaVersionv1Hu6eH5PdgwpxfDMq5YI889sSwDcYBflDkJuoV1xL8"
       },
       "Export": {
         "Name": "sls-signup-v2-dev-SignupMainLambdaLambdaFunctionQualifiedArn"
