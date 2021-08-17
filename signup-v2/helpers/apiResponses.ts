@@ -1,15 +1,33 @@
 const apiResponses = {
-  _200: (body: { [key: string]: any }) => {
-    return {
+  error_200: (body: { [key: string]: any }, event: {}) => {
+    let responseBody = {
+      message: body,
+      input: event,
+    };
+    let response = {
       statusCode: 200,
-      body: JSON.stringify(body, null, 2),
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(responseBody),
     };
+    console.log("response: " + JSON.stringify(response));
+    return response;
   },
-  _400: (body: { [key: string]: any }) => {
-    return {
-      statusCode: 400,
-      body: JSON.stringify(body, null, 2),
+  error_400: (body: { [key: string]: any }, event: {} ) => {
+    let responseBody = {
+      message: body,
+      input:event
     };
+    let response = {
+      statusCode: 400,
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(responseBody),
+    };
+    console.log("response: " + JSON.stringify(response));
+    return response;
   },
 };
 
