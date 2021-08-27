@@ -95,7 +95,7 @@ export const uploadCVToS3 = async (event: APIGatewayEvent, headers) => {
   if (jobTitle) {
     filePath = jobTitle + "/" + name + "." + fileMimeType.ext;
   } else {
-    filePath = "Others" + "/" + name +  "." + fileMimeType.ext;
+    filePath = "Others" + "/" + name + "." + fileMimeType.ext;
   }
 
   const params = {
@@ -106,6 +106,13 @@ export const uploadCVToS3 = async (event: APIGatewayEvent, headers) => {
 
   const uploaded = await s3.upload(params).promise();
   if (uploaded) {
-    return true;
+    return uploaded.Key;
   }
+};
+
+export const getCvURL = (key: string)  => {
+  var params = { Bucket: "lereum-jobopening-bucket2", Key: key };
+  s3.getSignedUrl("putObject", params, function (err, url) {
+    return url;
+  });
 };

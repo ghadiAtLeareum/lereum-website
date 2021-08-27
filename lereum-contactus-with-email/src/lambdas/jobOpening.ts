@@ -7,7 +7,7 @@ import type {
   APIGatewayEvent,
   APIGatewayProxyResult,
 } from "aws-lambda";
-import { uploadCVToS3 } from "../utils";
+import { uploadCVToS3, getCvURL, getPayload } from "../utils";
 
 const ses = new SES({ region: "us-east-1" });
 
@@ -31,6 +31,11 @@ export async function sendemailwithresume(
       };
     }
 
+    const body = await getPayload(event);
+    const key = body.name + ".pdf";
+    const cvURL = getCvURL(key);
+    console.log(cvURL);
+    
   } catch (e) {
     console.error("An exception was thrown!");
     console.error(e.message);
