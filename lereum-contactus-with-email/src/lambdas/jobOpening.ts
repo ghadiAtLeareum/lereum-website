@@ -27,20 +27,26 @@ export async function sendemailwithresume(
     "Access-Control-Allow-Methods": "OPTIONS,POST",
   };
   try {
-  
     const result = await uploadCVToS3(event, headers);
     if (result) {
-
       const body = await getPayload(event);
-      const { name, from, message, nationality, phoneNumber, jobTitle , jobLocation} = body;
+      const {
+        name,
+        from,
+        message,
+        nationality,
+        phoneNumber,
+        jobTitle,
+        jobLocation,
+      } = body;
       console.log("This is the body");
 
       const key = body.name + ".pdf";
       const bucket = "lereum-jobopening-bucket2";
-      let  cvURL = getCvURL(bucket, key, jobTitle);
+      let cvURL = getCvURL(bucket, key, jobTitle);
       console.log("this is the cv url");
-      cvURL = cvURL.replace(/\s+/g, "+");
-      console.log("this is the updated CV")
+      cvURL = cvURL.replace(/ /g, "+");
+      console.log("this is the updated CV");
       console.log(cvURL);
 
       const params = createSESSendEmailParamsForJobOpening(
@@ -57,15 +63,13 @@ export async function sendemailwithresume(
       );
 
       console.log("Those are the email params");
-      console.log(params)
+      console.log(params);
 
       const result = await ses.sendTemplatedEmail(params).promise();
-      
+
       return {
         statusCode: 200,
-        body:
-          "CV added successfully , and email sent to " +
-          targetEmail ,
+        body: "CV added successfully , and email sent to " + targetEmail,
         headers,
       };
     }
