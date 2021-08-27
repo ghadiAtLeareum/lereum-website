@@ -1,0 +1,43 @@
+service: lereum-job-openings
+
+useDotenv: true
+configValidationMode: error
+
+package:
+  individually: true  
+  excludeDevDependencies: false
+
+plugins:
+  - serverless-bundle
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+  profile: lereum-website
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - 'ses:SendEmail'
+            - 'ses:SendRawEmail'
+            - 'ses:SendTemplatedEmail'
+            - 's3:*'
+          Resource: '*'
+          Condition:
+            ForAllValues:StringLike:
+              ses:Recipients:
+                - '*@lereum.com'
+                - '*@auto.lereum.com'
+                - 'lereum2021@gmail.com'
+
+functions:
+  jobopening:
+    handler: src/lambdas/jobOpening.sendemailwithresume
+    events:
+      - http:
+          path: jobopenings
+          method: post
