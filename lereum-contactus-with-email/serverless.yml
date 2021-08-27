@@ -33,6 +33,7 @@ provider:
                 - '*@lereum.com'
                 - '*@auto.lereum.com'
                 - 'lereum2021@gmail.com'
+                
 
 functions:
   jobopening:

@@ -73,6 +73,38 @@ export const createSESSendEmailParamsForPartnerShip = (
   };
 };
 
+
+export const createSESSendEmailParamsForJobOpening = (
+  source: string,
+  destination: string,
+  email: string,
+  name: string,
+  innerMessage: string,
+  nationality: string,
+  phoneNumber: string,
+  jobTitle: string,
+  jobLocation:string,
+  cvURL: string
+): SES.Types.SendTemplatedEmailRequest => {
+  return {
+    Template: "JobOpening",
+    Destination: {
+      ToAddresses: [destination],
+    },
+    Source: source,
+    TemplateData: JSON.stringify({
+      emailType: "JobOpening",
+      email,
+      fullName: name,
+      innerMessage,
+      nationality,
+      phoneNumber,
+      jobTitle,
+      jobLocation,
+      cvURL,
+    }),
+  };
+};
 export const uploadCVToS3 = async (event: APIGatewayEvent, headers) => {
   const body = await getPayload(event);
   const { base64CV, jobTitle, name } = body;
