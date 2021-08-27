@@ -1,7 +1,7 @@
 {
   "Template": {
     "TemplateName": "JobOpening",
-    "SubjectPart": "Lereum Website Email Message from {{email}} for partner ship",
+    "SubjectPart": "Lereum Website Email Message from {{email}} for Job Opening",
     "TextPart": "{{emailType}}\nHi, My name is: {{fullName}}.\nMessage content : {{innerMessage}}\nEmail :{{email}}\nNationality : {{nationality}}\nPhone Number : {{phoneNumber}}\nJob Title: {{jobTitle}}\nJob Location : {{jobLocation}}\nMy CV: {{cvURL}}\nUnsubscribe from these alerts."
   }
 }

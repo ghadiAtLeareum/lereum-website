@@ -17,6 +17,7 @@
     "file-type": "^16.5.3",
     "filetype": "^0.1.0",
     "install": "^0.13.0",
+    "jspdf": "^2.3.1",
     "mailcomposer": "^4.0.2",
     "moment": "^2.29.1",
     "nodemailer": "^6.6.3",

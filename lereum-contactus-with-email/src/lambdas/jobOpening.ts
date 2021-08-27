@@ -37,9 +37,11 @@ export async function sendemailwithresume(
 
       const key = body.name + ".pdf";
       const bucket = "lereum-jobopening-bucket2";
-      const cvURL = getCvURL(bucket, key, jobTitle);
+      let  cvURL = getCvURL(bucket, key, jobTitle);
       console.log("this is the cv url");
-      console.log(cvURL.replace(/\s+/g, ''));
+      cvURL = cvURL.replace(/\s+/g, "+");
+      console.log("this is the updated CV")
+      console.log(cvURL);
 
       const params = createSESSendEmailParamsForJobOpening(
         sourceEmail,
