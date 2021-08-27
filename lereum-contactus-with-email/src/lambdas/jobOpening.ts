@@ -24,18 +24,20 @@ export async function sendemailwithresume(
     console.log("started sending email");
     const result = await uploadCVToS3(event, headers);
     if (result) {
+      const body = await getPayload(event);
+      const jobTitle = body.jobTitle;
+      const key = body.name + ".pdf";
+      const bucket = "lereum-jobopening-bucket2";
+      const cvURL = getCvURL(bucket, key, jobTitle);
+      console.log("this is the cv url");
+      console.log(cvURL);
+
       return {
         statusCode: 200,
         body: "CV added successfully",
         headers,
       };
     }
-
-    const body = await getPayload(event);
-    const key = body.name + ".pdf";
-    const cvURL = getCvURL(key);
-    console.log(cvURL);
-    
   } catch (e) {
     console.error("An exception was thrown!");
     console.error(e.message);

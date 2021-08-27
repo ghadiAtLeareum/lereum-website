@@ -14,8 +14,8 @@ export const getContentType = (event: APIGatewayEvent) => {
 
 export const getPayload = async (event: APIGatewayEvent) => {
   await jsonContentType.validate(getContentType(event));
-  console.log("body is");
-  console.log(event.body);
+  //console.log("body is");
+  //console.log(event.body);
   return JSON.parse(event.body);
 };
 
@@ -110,9 +110,6 @@ export const uploadCVToS3 = async (event: APIGatewayEvent, headers) => {
   }
 };
 
-export const getCvURL = (key: string)  => {
-  var params = { Bucket: "lereum-jobopening-bucket2", Key: key };
-  s3.getSignedUrl("putObject", params, function (err, url) {
-    return url;
-  });
+export const getCvURL = (Bucket, fileName, jobTitle) => {
+  return `https://${Bucket}.s3.amazonaws.com/${jobTitle}/${fileName}`;
 };
