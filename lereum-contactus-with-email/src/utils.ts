@@ -74,37 +74,6 @@ export const createSESSendEmailParamsForPartnerShip = (
 };
 
 
-export const createSESSendEmailParamsForJobOpening = (
-  source: string,
-  destination: string,
-  email: string,
-  name: string,
-  innerMessage: string,
-  nationality: string,
-  phoneNumber: string,
-  jobTitle: string,
-  jobLocation:string,
-  cvURL: string
-): SES.Types.SendTemplatedEmailRequest => {
-  return {
-    Template: "JobOpening",
-    Destination: {
-      ToAddresses: [destination],
-    },
-    Source: source,
-    TemplateData: JSON.stringify({
-      emailType: "JobOpening",
-      email,
-      fullName: name,
-      innerMessage,
-      nationality,
-      phoneNumber,
-      jobTitle,
-      jobLocation,
-      cvURL,
-    }),
-  };
-};
 export const uploadCVToS3 = async (event: APIGatewayEvent, headers) => {
   const body = await getPayload(event);
   const { base64CV, jobTitle, name } = body;
@@ -142,6 +111,6 @@ export const uploadCVToS3 = async (event: APIGatewayEvent, headers) => {
   }
 };
 
-export const getCvURL = (Bucket, fileName, jobTitle) => {
-  return `https://${Bucket}.s3.amazonaws.com/${jobTitle}/${fileName}`;
+export const getS3File = async (bucket, key) => {
+  return s3.getObject({ Bucket: bucket, Key: key }).promise()
 };

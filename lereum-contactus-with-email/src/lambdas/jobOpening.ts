@@ -1,6 +1,7 @@
 import { AWSError, SES } from "aws-sdk";
 import { S3 } from "aws-sdk";
 const s3 = new S3();
+import * as nodemailer from "nodemailer";
 import { format } from "util";
 import { sourceEmail, targetEmail } from "../config";
 import type {
@@ -8,12 +9,7 @@ import type {
   APIGatewayEvent,
   APIGatewayProxyResult,
 } from "aws-lambda";
-import {
-  uploadCVToS3,
-  getCvURL,
-  getPayload,
-  createSESSendEmailParamsForJobOpening,
-} from "../utils";
+import { uploadCVToS3, getS3File, getPayload } from "../utils";
 
 const ses = new SES({ region: "us-east-1" });
 
@@ -41,31 +37,52 @@ export async function sendemailwithresume(
       } = body;
       console.log("This is the body");
 
-      const key = body.name + ".pdf";
+      const key = jobTitle + "/" + body.name + ".pdf";
+      console.log("this is key");
+      console.log(key);
+
       const bucket = "lereum-jobopening-bucket2";
-      let cvURL = getCvURL(bucket, key, jobTitle);
-      console.log("this is the cv url");
-      cvURL = cvURL.replace(/ /g, "+");
-      console.log("this is the updated CV");
-      console.log(cvURL);
 
-      const params = createSESSendEmailParamsForJobOpening(
-        sourceEmail,
-        targetEmail,
-        from,
-        name,
-        message,
-        nationality,
-        phoneNumber,
-        jobTitle,
-        jobLocation,
-        cvURL
-      );
+      const attach = await getS3File(bucket, key);
 
-      console.log("Those are the email params");
-      console.log(params);
+      console.log("this is the s3 body");
+      console.log(attach.Body);
 
-      const result = await ses.sendTemplatedEmail(params).promise();
+      const mailOptions = {
+        from: "auto@auto.lereum.com",
+        subject: "New Job Application!",
+        html: `<p>You got a contact message from: <b>${from}</b></p>
+                <p>My Name Is : <b>${name}</b></p>
+                <p>Applying As : <b>${jobTitle}</b></p>
+                <p><p>Job Location: <b>${jobLocation}</b></p>
+                <p>Nationality : <b>${nationality}</b></p>
+                <p>My Phone: <b>${phoneNumber}</b></p>
+                <p>Message: <b>${message}</b></p>`,
+        to: "ghadi@lereum.com",
+        bcc: ["hr@lereum.com"],
+        attachments: [
+          {
+            filename: body.name + ".pdf",
+            content: attach.Body.toString("base64"),
+            encoding: "base64",
+          },
+        ],
+      };
+      console.log(mailOptions);
+
+      const transporter = nodemailer.createTransport({
+        SES: ses,
+      });
+
+      // send email
+      transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
+          console.log(err);
+          console.log("Error sending email");
+        } else {
+          console.log("Email sent successfully");
+        }
+      });
 
       return {
         statusCode: 200,
