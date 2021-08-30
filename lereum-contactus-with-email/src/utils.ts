@@ -76,15 +76,17 @@ export const createSESSendEmailParamsForPartnerShip = (
 };
 
 export const uploadCVToS3 = async (event: APIGatewayEvent, headers) => {
+  //get event body
   const body = await getPayload(event);
   const { base64CV, jobTitle, name } = body;
 
+  //trasnform the cv to buffer
   const decodedCV = Buffer.from(base64CV, "base64");
+
+  //Get the file mime type
   const fileMimeType = await fileType.fromBuffer(decodedCV);
 
-  console.log("The file type is");
-  console.log(fileMimeType);
-
+  // chek if file mime type is valid
   if (fileMimeType === null || fileMimeType === undefined) {
     return {
       statusCode: 500,
@@ -93,6 +95,8 @@ export const uploadCVToS3 = async (event: APIGatewayEvent, headers) => {
     };
   }
 
+  //if a job title is specified, we need to send the job title to the server
+  // else we can add the file to the others folder
   let filePath = "";
   if (jobTitle) {
     filePath = jobTitle + "/" + name + "." + fileMimeType.ext;
@@ -100,12 +104,14 @@ export const uploadCVToS3 = async (event: APIGatewayEvent, headers) => {
     filePath = "Others" + "/" + name + "." + fileMimeType.ext;
   }
 
+  //s3 upload params
   const params = {
     Body: decodedCV,
     Bucket: "lereum-jobopening-bucket2",
     Key: filePath,
   };
 
+  //upload
   const uploaded = await s3.upload(params).promise();
   if (uploaded) {
     return uploaded.Key;
@@ -117,6 +123,7 @@ export const getS3File = async (bucket, key) => {
 };
 
 export const sendEmailWithAttach = async (event: APIGatewayEvent) => {
+  //Get the body object
   const body = await getPayload(event);
   const {
     name,
@@ -127,32 +134,34 @@ export const sendEmailWithAttach = async (event: APIGatewayEvent) => {
     jobTitle,
     jobLocation,
   } = body;
-  console.log("This is the body");
 
+  //This the file key in aws , the format is the folder name
+  // then followed by the file name
   const key = jobTitle + "/" + body.name + ".pdf";
-  console.log("this is key");
-  console.log(key);
 
+  //S3 bucket
   const bucket = "lereum-jobopening-bucket2";
 
+  //This function gets the s3 file uploaded to s3 so that it can be used
+  // and sent as an attachement to the hr email
   const attach = await getS3File(bucket, key);
 
-  console.log("this is the s3 body");
-  console.log(attach.Body);
 
+  //node mailer options for sending an email
   const mailOptions = {
     from: "auto@auto.lereum.com",
     subject: "New Job Application!",
-    html: `<p>You got a contact message from: <b>${from}</b></p>
+    html:       `<p>You got a contact message from: <b>${from}</b></p>
                 <p>My Name Is : <b>${name}</b></p>
                 <p>Applying As : <b>${jobTitle}</b></p>
                 <p><p>Job Location: <b>${jobLocation}</b></p>
                 <p>Nationality : <b>${nationality}</b></p>
                 <p>My Phone: <b>${phoneNumber}</b></p>
                 <p>Message: <b>${message}</b></p>`,
-    to: "ghadi@lereum.com",
+    to: "hr@lereum.com",
     attachments: [
       {
+        // be sure to specify the encoding and  content to be base64 
         filename: body.name + ".pdf",
         content: attach.Body.toString("base64"),
         encoding: "base64",
@@ -161,16 +170,13 @@ export const sendEmailWithAttach = async (event: APIGatewayEvent) => {
   };
   console.log(mailOptions);
 
+  // the transporter constructor with ses and nodemailer
   const transporter = nodemailer.createTransport({
     SES: ses,
   });
 
-  // send email
-  transporter.sendMail(mailOptions, function (err, info) {
-    if (err) {
-      return err;
-    } else {
-      return true;
-    }
-  });
+  //send email
+  const sentRes = transporter.sendMail(mailOptions);
+  console.log(await sentRes);
+  return true;
 };
