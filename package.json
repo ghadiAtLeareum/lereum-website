@@ -1,0 +1,33 @@
+{
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.81",
+    "@types/aws-sdk": "^2.7.0",
+    "@types/base64topdf": "^1.1.0",
+    "@types/node": "^16.4.10",
+    "@types/nodemailer": "^6.4.4",
+    "@types/qs": "^6.9.7",
+    "@types/uuid": "^8.3.1",
+    "serverless-bundle": "^4.4.0",
+    "serverless-dotenv-plugin": "^3.9.0",
+    "serverless-offline": "^8.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-lambda": "^3.28.0",
+    "@aws-sdk/client-s3": "^3.27.0",
+    "@aws-sdk/client-ses": "^3.27.0",
+    "axios": "^0.21.1",
+    "base64topdf": "^1.1.8",
+    "file-type": "^16.5.3",
+    "filetype": "^0.1.0",
+    "install": "^0.13.0",
+    "jspdf": "^2.3.1",
+    "mailcomposer": "^4.0.2",
+    "moment": "^2.29.1",
+    "nodemailer": "^6.6.3",
+    "nodemailer-ses-transport": "^1.5.1",
+    "qs": "^6.10.1",
+    "sha1": "^1.1.1",
+    "uuid": "^8.3.2",
+    "yup": "^0.32.9"
+  }
+}
